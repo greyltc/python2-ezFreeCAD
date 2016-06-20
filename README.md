@@ -62,7 +62,7 @@ mk-build-deps
 # Errors in the next few lines, that's fine we'll fix them up with "apt-get -f install" later
 #apt-get download netgen-headers libnglib-dev libnglib-4.9.13
 #sudo dpkg --force-all -i netgen-headers* libnglib-dev* libnglib-4.9.13*
-sudo dpkg -i freecad-stable-build-deps*
+sudo dpkg -i freecad-build-deps*
 sudo apt-get -f install
 sed -i 's,-DOCC_INCLUDE_DIR="/usr/include/oce" \\,-DOCC_INCLUDE_DIR="/opt/occt/inc" \\\n-DOCC_LIBRARY_DIR="/opt/occt/lin64/gcc/lib" \\,g' debian/rules
 dpkg-buildpackage -rfakeroot -uc -b
