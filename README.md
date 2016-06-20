@@ -47,11 +47,12 @@ sudo su -c 'echo "source /opt/occt/env.sh" > /etc/profile.d/occt.sh'
 sudo sed -i 's,aScriptPath=\${BASH_SOURCE%/\*}; if \[ -d "\${aScriptPath}" \]; then cd "\$aScriptPath"; fi; aScriptPath="\$PWD";,aScriptPath=\${BASH_SOURCE%/\*}; if \[ -d "\${aScriptPath}" \]; then pushd "\$aScriptPath"; fi; aScriptPath="\$PWD"; popd;,g' /opt/occt/env.sh
 source /opt/occt/env.sh
 
-cd ..
+cd ../..
 sudo add-apt-repository -su ppa:freecad-maintainers/freecad-daily
+sudo sed -i 's,# deb-src http://gb.archive.ubuntu.com/ubuntu/ xenial universe,deb-src http://gb.archive.ubuntu.com/ubuntu/ xenial universe,g' /etc/apt/sources.list
 sudo apt-get update
-apt-get source freecad-daily
-sudo apt-get install cmake devscripts tcl8.5-dev tk8.5 tk8.5-dev
+apt-get source freecad
+sudo apt-get install cmake devscripts tcl8.5-dev tk8.5 tk8.5-dev equivs
 cd freecad-*
 #sudo sed -i 's| liboce-foundation-dev,|# liboce-foundation-dev,|g' debian/control
 #sudo sed -i 's| liboce-modeling-dev,|# liboce-modeling-dev,|g' debian/control
@@ -60,9 +61,10 @@ sudo sed -i 's| liboce-visualization-dev,|# liboce-visualization-dev,|g' debian/
 sudo sed -i 's| oce-draw,|# oce-draw,|g' debian/control
 sudo sed -i 's| netgen-headers,|# netgen-headers,|g' debian/control
 mk-build-deps
+# Errors in the next few lines, that's fine we'll fix them up with "apt-get -f install" later
 apt-get download netgen-headers libnglib-dev libnglib-4.9.13
 sudo dpkg --force-all -i netgen-headers* libnglib-dev* libnglib-4.9.13*
-sudo dpkg -i freecad-build-deps* #<-- Errors here, that's fine we'll fix them in the next step
+sudo dpkg -i freecad-build-deps*
 sudo apt-get -f install
 sed -i 's,-DOCC_INCLUDE_DIR="/usr/include/oce" \\,-DOCC_INCLUDE_DIR="/opt/occt/inc" \\\n-DOCC_LIBRARY_DIR="/opt/occt/lin64/gcc/lib" \\,g' debian/rules
 dpkg-buildpackage -rfakeroot -uc -b
