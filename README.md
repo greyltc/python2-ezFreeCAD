@@ -58,7 +58,7 @@ cd freecad-*
 #sudo sed -i 's| liboce-modeling-dev,|# liboce-modeling-dev,|g' debian/control
 sudo sed -i 's| liboce-ocaf-dev,|# liboce-ocaf-dev,|g' debian/control
 sudo sed -i 's| liboce-visualization-dev,|# liboce-visualization-dev,|g' debian/control
-sudo sed -i 's| oce-draw,|# oce-draw,|g' debian/control
+sudo sed -i '/oce-draw,/d' debian/control
 sudo sed -i 's| netgen-headers,|# netgen-headers,|g' debian/control
 mk-build-deps
 # Errors in the next few lines, that's fine we'll fix them up with "apt-get -f install" later
