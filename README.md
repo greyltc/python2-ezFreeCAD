@@ -49,7 +49,8 @@ source /opt/occt/env.sh
 
 cd ..
 sudo add-apt-repository -su ppa:freecad-maintainers/freecad-daily
-apt-get source freecad
+sudo apt-get update
+apt-get source freecad-daily
 sudo apt-get install cmake devscripts tcl8.5-dev tk8.5 tk8.5-dev
 cd freecad-*
 #sudo sed -i 's| liboce-foundation-dev,|# liboce-foundation-dev,|g' debian/control
