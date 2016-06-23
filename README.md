@@ -50,14 +50,14 @@ source /opt/occt/env.sh
 cd ../..
 sudo add-apt-repository -su ppa:freecad-maintainers/freecad-stable
 apt-get source freecad
-#sudo apt-get install cmake devscripts tcl8.5-dev tk8.5 tk8.5-dev equivs
+sudo apt-get install cmake devscripts tcl8.5-dev tk8.5 tk8.5-dev equivs
 cd freecad-*
 #sudo sed -i 's| liboce-foundation-dev,|# liboce-foundation-dev,|g' debian/control
 #sudo sed -i 's| liboce-modeling-dev,|# liboce-modeling-dev,|g' debian/control
-#sudo sed -i 's| liboce-ocaf-dev,|# liboce-ocaf-dev,|g' debian/control
-#sudo sed -i 's| liboce-visualization-dev,|# liboce-visualization-dev,|g' debian/control
-sudo sed -i '/oce-draw,/d' debian/control
-#sudo sed -i 's| netgen-headers,|# netgen-headers,|g' debian/control
+sudo sed -i 's| liboce-ocaf-dev,|# liboce-ocaf-dev,|g' debian/control
+sudo sed -i 's| liboce-visualization-dev,|# liboce-visualization-dev,|g' debian/control
+sudo sed -i 's| oce-draw,|# oce-draw,|g' debian/control
+sudo sed -i 's| netgen-headers,|# netgen-headers,|g' debian/control
 mk-build-deps
 # Errors in the next few lines, that's fine we'll fix them up with "apt-get -f install" later
 #apt-get download netgen-headers libnglib-dev libnglib-4.9.13
@@ -65,6 +65,7 @@ mk-build-deps
 sudo dpkg -i freecad-build-deps*
 sudo apt-get -f install
 sed -i 's,-DOCC_INCLUDE_DIR="/usr/include/oce" \\,-DOCC_INCLUDE_DIR="/opt/occt/inc" \\\n-DOCC_LIBRARY_DIR="/opt/occt/lin64/gcc/lib" \\,g' debian/rules
+sed -i 's,16.04,16.03,g' debian/rules
 dpkg-buildpackage -rfakeroot -uc -b
 #sudo apt-get remove netgen-headers libnglib-4.9.13 libnglib-dev
 sudo dpkg -i ../freecad_*.deb
