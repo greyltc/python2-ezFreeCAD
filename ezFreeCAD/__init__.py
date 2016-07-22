@@ -23,6 +23,7 @@ except:
 mydoc = FreeCAD.newDocument("mydoc")
 
 def cylinder (radius,height):
+    '''Create cylinder centered at origin, height is in Z dir'''
     return Part.makeCylinder(radius,height)
 
 def sphere(radius):
@@ -36,10 +37,12 @@ def rectangle(xDim,yDim):
     return Part.makePlane(xDim,yDim)
 
 def cube(xDim,yDim,zDim):
+    '''Create cube with bottom left corner at origin'''
     return Part.makeBox(xDim,yDim,zDim)
 
 # returns a circular face given a radius
 def circle(radius):
+    '''Create circle centered on origin (which plane?)'''
     circEdge = Part.makeCircle(radius)
     circWire = Part.Wire(circEdge)
     circFace = Part.Face(circWire)
@@ -347,6 +350,7 @@ def circArray(obj,n,px,py,pz,dx,dy,dz,fillAngle=360,startAngle=0):
 
 # moves an object or a list of objects
 def translate (objs,x,y,z):
+    '''superflous as part has a translate(self, tuple/vect) method'''
     if type(objs) is not list:
         listIn=False
         objs=[objs]
