@@ -140,6 +140,104 @@ def roundedRectangle(xDim,yDim,r=None,drillCorners=False,ear=False):
 
     return roundedGuy
 
+def cncRectangle(xDim,yDim,r=None,filletCorners=True):
+    '''a rectangle with rounded inner corners as would be made by a cnc
+
+    rect defs = bottom left
+    circles = center
+    '''
+    if filletCorners is False:
+        filletCorners=[False,False,False,False]
+
+    elif filletCorners is True:
+        filletCorners=[True,True,True,True]
+
+    elif type(filletCorners) is tuple:
+        filletCorners = list(filletCorners)
+    elif len(filletCorners) is not 4:
+        print("Invalid value for filletCorners in roundedRectangle function")
+        return None
+
+
+    if r is None:
+        radii=[0,0,0,0]
+    elif (type(r) is float) or (type(r) is int):
+        radii=[r,r,r,r]
+    elif (type(r) is list) or (type(r) is tuple) and len(r) is 4:
+        radii=[r[0],r[1],r[2],r[3]]
+    else:
+        print("Invalid value for r in roundedRectangle function")
+        return None
+
+    for rad in radii:
+        if rad > yDim or rad> xDim:
+            print("This rounded rectangle is impossible to draw!")
+            return None
+
+    
+    baseRect= rectangle(xDim, yDim)
+    
+    circles = []
+    if radii[0]>0: # northwest
+        c0 = circle(radii[0])
+        s0 = rectangle(radii[0], radii[0])
+        cornerOffsetXY = radii[0]
+
+        if filletCorners[0] is True:
+            s0 = translate(s0, -radii[0],0,0)
+            sh0 = difference(s0, c0)
+            sh0 = translate(sh0,cornerOffsetXY,yDim-cornerOffsetXY,0)
+            circles.append(sh0)
+
+    if radii[1]>0: # northeast
+        c1 = circle(radii[1])
+        s1 = rectangle(radii[1], radii[1])
+        cornerOffsetXY = radii[1]
+
+        if filletCorners[1] is True:
+            s1 = translate(s1, 0,0,0)
+            sh1 = difference(s1, c1)
+            sh1 = translate(sh1,xDim-cornerOffsetXY,yDim-cornerOffsetXY,0)
+            circles.append(sh1)
+
+    if radii[2]>0: # southeast
+        c2 = circle(radii[2])
+        s2 = rectangle(radii[2], radii[2])
+        cornerOffsetXY = radii[2]
+
+        if filletCorners[2] is True:
+            s2 = translate(s2, 0,-radii[2],0)
+            sh2 = difference(s2, c2)
+            sh2 = translate(sh2,xDim-cornerOffsetXY,cornerOffsetXY,0)
+            circles.append(sh2)
+
+    if radii[3]>0: # southwest
+        c3 = circle(radii[3])
+        s3 = rectangle(radii[3], radii[3])
+        cornerOffsetXY = radii[3]
+
+        if filletCorners[3] is True:
+            s3 = translate(s3, -radii[3],-radii[3],0)
+            sh3 = difference(s3, c3)
+            sh3 = translate(sh3,cornerOffsetXY,cornerOffsetXY,0)
+            circles.append(sh3)
+  
+    
+    if len(circles) > 0:
+        roundedGuy = difference(baseRect, [c for c in circles])
+    else:
+        roundedGuy = baseRect
+ 
+    return roundedGuy
+
+#test
+# rect = cncRectangle(28,28, [3,3,3,3],filletCorners = True)
+# solid = extrude(rect, 0, 0, 1)
+# solid2STEP(solid, "cncRect.step")
+
+# print ("Done")
+
+
 # only tested/working with solid+solid and face+face unions
 def union(thingsA,thingsB,tol=1e-5):
     if type(thingsB) is not list:
