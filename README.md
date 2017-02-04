@@ -3,6 +3,12 @@ Python wrapper for interfacing with FreeCAD it make it easier to draw 3D objects
 
 ## Installation
 
+First make sure FreeCAD is installed and that FreeCAD.so or FreeCAD.dll is in your python path so that you can do `import FreeCAD` in python without any errors.
+
+```bash
+pip install ezFreeCAD
+```
+
 ### Windows
 1. Install [git](https://git-scm.com/downloads) using the default install options
 1. Install [WinPython](https://github.com/winpython/winpython/releases/tag/1.2.20151029) with python 2.7
@@ -76,8 +82,7 @@ pip2 install --upgrade git+https://github.com/AFMD/ezFreeCAD.git #<-- install th
 ```
 ### Arch
 ```
-pacman -S freecad pip2 git
-pip2 install --upgrade git+https://github.com/AFMD/ezFreeCAD.git #<-- install this library
+pacaur -S python2-ezfreecad
 ```
 ## Usage
 The FreeCAD python module must be imported before `import ezFreeCAD` will work.  
