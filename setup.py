@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='ezFreeCAD',
-      version='0.1',
+      version='0.11',
       description='Python wrapper for interfacing with FreeCAD it make it easier to draw 3D objects programmatically',
       url='https://github.com/AFMD/ezFreeCAD',
       author='Grey Christoforo',

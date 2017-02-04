@@ -203,7 +203,13 @@ def _multiCut(parentObject,childObjects,tol=1e-5):
     while len(cuttingTools) is not 0: # let's cut away until our tools run out
         nPieces = len(workpieces)
         for i in range(nPieces):
-            cutResult = workpieces[i].cut(cuttingTools[0]).removeSplitter()
+            cutResult = workpieces[i].cut(cuttingTools[0])
+            
+            try:
+                cutResult.removeSplitter() # removeSplitter if possible
+            except:
+                pass
+                
             if len(cutResult.Solids) > 0:
                 cutResult = cutResult.Solids # there's a solid in our results, so we'll assume to be operating on those
             else:
@@ -243,7 +249,10 @@ def loadDXF (DXFFilename):
     # the one we're interested in has the name
     importDXF.insert(DXFFilename,mydoc.Name)
     group = mydoc.getObject(os.path.splitext(os.path.split(DXFFilename)[1])[0])
-    partFeature = mydoc.getObject("Block_PART__FEATURE")
+    if group is None:
+        group = mydoc.getObject('_d')
+
+    #partFeature = mydoc.getObject("Block_PART__FEATURE")
     nLayers = len(group.OutList)
     retDict = {}
     for i in range(nLayers):
