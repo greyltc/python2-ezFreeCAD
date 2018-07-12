@@ -3,7 +3,7 @@
 from __future__ import division
 
 import sys
-sys.path.append('/usr/lib/freecad') # path to your FreeCAD.so or FreeCAD.dll file
+sys.path.append('/opt/freecad/lib')
 import FreeCAD
 
 import warnings
