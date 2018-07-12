@@ -18,10 +18,6 @@ try:
     import importDXF
 except:
     warnings.warn("Could not import the importDXF module, dxf related functions will be broken", ImportWarning)
-    
-import FreeCADGui
-FreeCADGui.setupWithoutGUI()
-import ImportGui
 
 
 mydoc = FreeCAD.newDocument("mydoc")
@@ -273,6 +269,25 @@ def loadDXF (DXFFilename):
         mydoc.removeObject(mydoc.Objects[0].Name)
     return retDict
 
+
+
+# sends a solid object to a step file
+def solid2STEP (solids,outputFilenames):
+    if type(solids) is not list:
+        solids=[solids]
+    if type(outputFilenames) is not list: # all the solids go into one file
+        tmpParts = []
+        for i in range(len(solids)):
+            tmpParts.append(mydoc.addObject("Part::Feature"))
+            tmpParts[i].Shape = solids[i]
+        Part.export(tmpParts,outputFilenames)
+        for i in range(len(tmpParts)): # remove all objects from the document
+            mydoc.removeObject(tmpParts[i].Name)
+    else: # list of filenames
+        for i in range(len(solids)):
+            solids[i].exportStep(outputFilenames[i])        
+    return
+
 # sends a solid object(or list of objects) to a stl file(s)
 def solid2STL (solids,outputFilenames,meshTol=0.01):
     if type(solids) is not list:
@@ -283,27 +298,8 @@ def solid2STL (solids,outputFilenames,meshTol=0.01):
         mesh.write(outputFilenames[i],"STL")
     return
 
-# sends a solid object to a step file
-def solid2STEP (solids,outputFilenames):
-
-    if type(solids) is not list:
-        solids=[solids]
-    if type(outputFilenames) is not list: # all the solids go into one file
-        tmpParts = []
-        for i in range(len(solids)):
-            tmpParts.append(mydoc.addObject("Part::Feature"))
-            tmpParts[i].Shape = solids[i]
-        ImportGui.export(tmpParts,outputFilenames)
-        for obj in mydoc.Objects: # remove all objects from the document
-            if hasattr(obj, "Name"):
-                mydoc.removeObject(obj.Name)
-    else: # list of filenames
-        for i in range(len(solids)):
-            ImportGui.export(solids[i],outputFilenames[i])
-    return
-
 # loads a file(or a list of filenames) (probably handles things other than just STEP) and returns a solid shape
-def STEP2Solid(stepFilenames):   
+def STEP2Solid(stepFilenames):
     if type(stepFilenames) is not list:
         listIn = False
         stepFilenames=[stepFilenames]
@@ -311,12 +307,7 @@ def STEP2Solid(stepFilenames):
         listIn=True
     robjs=[]
     for stepFilename in stepFilenames:
-        #robjs.append(Part.read(stepFilename))
-        ImportGui.insert(stepFilename,"mydoc")
-        robjs.append(mydoc.Objects)
-        for obj in mydoc.Objects: # remove all objects from the document
-            if hasattr(obj, "Name"):
-                mydoc.removeObject(obj.Name)
+        robjs.append(Part.read(stepFilename))
     if (len(robjs) is 1) and (listIn is False):
         return robjs[0]
     else:
